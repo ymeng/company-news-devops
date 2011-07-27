@@ -24,7 +24,7 @@ namespace :aws do
                                          "PSK" => "W3lcom3%1"})
     stack = nil
     until stack
-      sleep 1
+      sleep 30
       stack = find_stack(cloud)
     end
     puts "your servers have been provisioned successfully".white
