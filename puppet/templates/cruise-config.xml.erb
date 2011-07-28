@@ -29,9 +29,10 @@ DniKZWb36R7qpO9RMWgHbhUpkcT/EYSutIRgp+hYzQ==</license>
         </jobs>
       </stage>
     </pipeline>
+
     <pipeline name="Development" labeltemplate="${upstreamArtifact}">
       <materials>
-        <git url="" />
+        <git url="git://github.com/ymeng/company-news.git" />
         <pipeline pipelineName="MainBuild" stageName="MainBuild" materialName="upstreamArtifact"/>
       </materials>
       <stage name="Deploy">
@@ -44,6 +45,48 @@ DniKZWb36R7qpO9RMWgHbhUpkcT/EYSutIRgp+hYzQ==</license>
           <job name="Deploy">
             <tasks>
               <exec command="./go" args="mc:deploy[dev]" />
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+    
+    <pipeline name="UAT" labeltemplate="${upstreamArtifact}">
+      <materials>
+        <git url="git://github.com/ymeng/company-news.git" />
+        <pipeline pipelineName="MainBuild" stageName="MainBuild" materialName="upstreamArtifact"/>
+      </materials>
+      <stage name="Deploy">
+        <approval type="manual" />
+        <environmentvariables>
+          <variable name="JAVA_HOME">/usr/lib/jvm/java-1.6.0/</variable>
+          <variable name="STOMP_SERVER"><%= admin_server %></variable>
+        </environmentvariables>
+        <jobs>
+          <job name="Deploy">
+            <tasks>
+              <exec command="./go" args="mc:deploy[uat]" />
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+
+	<pipeline name="Prod" labeltemplate="${upstreamArtifact}">
+      <materials>
+        <git url="git://github.com/ymeng/company-news.git" />
+        <pipeline pipelineName="MainBuild" stageName="MainBuild" materialName="upstreamArtifact"/>
+      </materials>
+      <stage name="Deploy">
+        <approval type="manual" />
+        <environmentvariables>
+          <variable name="JAVA_HOME">/usr/lib/jvm/java-1.6.0/</variable>
+          <variable name="STOMP_SERVER"><%= admin_server %></variable>
+        </environmentvariables>
+        <jobs>
+          <job name="Deploy">
+            <tasks>
+              <exec command="./go" args="mc:deploy[prod]" />
             </tasks>
           </job>
         </jobs>

@@ -1,32 +1,31 @@
 import "base.pp"
 
 class app inherits base {
-	package { "tomcat6" :
-	    ensure => "present",
+	package { "tomcat6":
+	    ensure  => "present"
+	  }
+	
+	$prevayler_path = "/var/db/prevayler" 
+	
+	file { "${prevayler_path}":
+	    ensure 	=> "present",
+	    owner  	=> "tomcat",
+	    require => Package["tomcat6"]
+	  }
+	
+	file { "/etc/tomcat6/tomcat.conf":
+	    ensure 	=> "present",
+	    content => template("tomcat6.conf.erb"),
+	    require => [Package["tomcat6"], File["${prevayler_path}"]],
+	    notify 	=> Service["tomcat6"]  
 	}
 	
-	$prevayler_dir_path = "/var/db/prevayler"
-
 	service { "tomcat6":
-		ensure => running,
-		require => Package["tomcat6"],
-		hasstatus => true,
-		hasrestart => true,
+		ensure 		=> "running",
+		require 	=> Package["tomcat6"],
+	    hasstatus 	=> true,
+	    hasrestart 	=> true
 	}
-	
-	file { "${prevayler_dir_path}":
-		ensure => directory,
-		owner => "tomcat",
-		require => Package["tomcat6"],
-	}
-	
-	file { "/etc/tomcat6/tomcat6.conf":
-		ensure => present,
-		content => template("tomcat6.conf.erb"),
-		require => [Package["tomcat6"],File["${prevayler_dir_path}"]],
-		notify => Service["tomcat6"]
-	}
-	
 }
 
 include app

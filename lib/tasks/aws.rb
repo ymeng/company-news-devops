@@ -6,7 +6,7 @@ require "fog/aws/cloud_formation"
 namespace :aws do
   AWS_DIR = "#{File.dirname(__FILE__)}/aws"
   BOOTSTRAP_FILE = "bootstrap.tar.gz"
-  STACK_NAME = "company-news"
+  STACK_NAME = "ymeng"
 
   directory BUILD_DIR
 
